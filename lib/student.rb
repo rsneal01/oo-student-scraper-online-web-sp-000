@@ -1,3 +1,4 @@
+require 'pry'
 class Student
 
   attr_accessor :name, :location, :twitter, :linkedin, :github, :blog, :profile_quote, :bio, :profile_url 
@@ -5,10 +6,13 @@ class Student
   @@all = []
 
   def initialize(student_hash)
-    
+      @name = student_hash[:name]
+      @location = student_hash[:location]
+      @@all << self
   end
 
   def self.create_from_collection(students_array)
+    new_student = self.new(Scraper.scrape_index_page(index_url))
     
   end
 
@@ -19,5 +23,6 @@ class Student
   def self.all
     
   end
+  
 end
 

@@ -17,7 +17,7 @@ class Scraper
         # how are we supposed to know to use .attr here?
       }
       
-    end
+      end
     end
     scraped_students
   end
@@ -25,18 +25,26 @@ class Scraper
   def self.scrape_profile_page(profile_url)
     profile_page = Nokogiri::HTML(open(profile_url))
     scraped_student = {}
-    profile_page.css("body").each do |attribute|
-      scraped_student = {
-        :profile_quote => attribute.css("div.profile-quote").text,
-        :bio => attribute.css("div.description-holder p").text,
-        # :twitter => ,
-        # :linkedin => ,
-        # :blog => ,
-        # :github =>
-      }
+    link_array = profile_page.css(".social-icon-container").children.css("a").map {|element| element.attribute("href").value}
+    
+    link_array.each do |link|
+      if link.include?("twitter")
+        scraped_student[:twitter] = link
+      elsif link.include?("linkedin")
+        scraped_student[:linkedin] = link
+      elsif link.include?("github")
+        scraped_student[:github] = link
+      else 
+        scraped_student[:blog] = link
+      end
     end
+    
+    profile_quote = profile_page.css(".profile-quote").text
+    scraped_student[:profile_quote] = profile_quote
+    profile_bio = profile_page.css(".description-holder p").text
+    scraped_student[:bio] = profile_bio
     scraped_student
+  
   end
-
 end
 
