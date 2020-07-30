@@ -12,7 +12,9 @@ class Student
   end
 
   def self.create_from_collection(students_array)
-    new_student = self.new(Scraper.scrape_index_page(index_url))
+    students_array.each do |student|
+      self.new(student)
+    end
     
   end
 
